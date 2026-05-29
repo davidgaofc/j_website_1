@@ -1,4 +1,5 @@
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       display: flex;
@@ -10,17 +11,19 @@
       background: #f5f5f5;
     }
     #demo {
-      font-size: 3rem;
+      font-size: 8vw; /* Slightly smaller clock */
       font-weight: bold;
       color: #333;
       text-align: center;
-      margin-top: 40px;
-      margin-bottom: 40px;
+      margin-top: 7vw;
+      margin-bottom: 7vw;
     }
     h1 {
       font-family: sans-serif;
       color: #444;
-      margin-top: 60px;
+      margin-top: 8vw;
+      font-size: 7vw;
+      text-align: center;
     }
     #emoji-container {
       position: fixed;
@@ -31,14 +34,27 @@
     #emoji-btn, #move-btn {
       position: relative;
       z-index: 1001;
+      font-size: 7vw !important; /* Slightly smaller buttons */
+      padding: 3vw 6vw;
+      margin-top: 5vw;
+      border-radius: 2vw;
+      border: none;
+      background: #fffbe7;
+      color: #444;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    @media (min-width: 600px) {
+      #demo { font-size: 3rem; margin-top: 40px; margin-bottom: 40px; }
+      h1 { font-size: 3rem; margin-top: 60px; }
+      #emoji-btn, #move-btn { font-size: 1.5rem !important; padding: 12px 24px; border-radius: 12px; }
     }
   </style>
 </head>
 <body>
   <h1>'Till Next Time</h1>
   <p id="demo"></p>
-  <button id="emoji-btn" style="font-size:1.5rem; margin-top:30px;">Click If You Miss Me</button>
-  <button id="move-btn" style="font-size:1.5rem; margin-top:30px; position:absolute; left:50vw; top:80vh;">Click If You Don't Miss Me</button>
+  <button id="emoji-btn">Click If You Miss Me</button>
+  <button id="move-btn" style="position:absolute; left:50vw; top:80vh;">Click If You Don't Miss Me</button>
   <div id="emoji-container"></div>
 
   <script>
@@ -66,7 +82,7 @@
       const emojiElem = document.createElement('span');
       emojiElem.textContent = emoji;
       emojiElem.style.position = 'absolute';
-      emojiElem.style.fontSize = '2.5rem';
+      emojiElem.style.fontSize = '10vw'; // Slightly smaller emoji
       // Random position anywhere in viewport
       const vw = window.innerWidth;
       const vh = window.innerHeight;
@@ -105,10 +121,11 @@
       msgElem.style.top = `calc(${moveBtn.style.top} + ${btnHeight + 5}px)`;
       msgElem.style.background = "#fffbe7";
       msgElem.style.border = "1px solid #ffe066";
-      msgElem.style.padding = "8px 16px";
-      msgElem.style.borderRadius = "8px";
-      msgElem.style.fontSize = "1.2rem";
+      msgElem.style.padding = "3vw 5vw";
+      msgElem.style.borderRadius = "2vw";
+      msgElem.style.fontSize = "4vw";
       msgElem.style.zIndex = 2000;
+      msgElem.style.textAlign = "center";
       document.body.appendChild(msgElem);
       setTimeout(() => {
         msgElem.remove();
