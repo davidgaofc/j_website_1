@@ -1,8 +1,44 @@
+<head>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      background: #f5f5f5;
+    }
+    #demo {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #333;
+      text-align: center;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+    h1 {
+      font-family: sans-serif;
+      color: #444;
+      margin-top: 60px;
+    }
+    #emoji-container {
+      position: fixed;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 999;
+    }
+    #emoji-btn, #move-btn {
+      position: relative;
+      z-index: 1001;
+    }
+  </style>
+</head>
 <body>
   <h1>'Till Next Time</h1>
   <p id="demo"></p>
   <button id="emoji-btn" style="font-size:1.5rem; margin-top:30px;">Click If You Miss Me</button>
-  <button id="move-btn" style="font-size:1.5rem; margin-top:30px; position:absolute; left:50vw; top:80vh;">Catch Me!</button>
+  <button id="move-btn" style="font-size:1.5rem; margin-top:30px; position:absolute; left:50vw; top:80vh;">Click If You Don't Miss Me</button>
   <div id="emoji-container"></div>
 
   <script>
@@ -23,7 +59,7 @@
       }
     }, 1000);
 
-    // Emoji button logic
+    // Emoji button logic (random anywhere on page)
     const emojis = ["💜", "😘", "🫦", "💚", "🫂", "🫶"];
     document.getElementById('emoji-btn').onclick = function() {
       const emoji = emojis[Math.floor(Math.random() * emojis.length)];
@@ -31,26 +67,25 @@
       emojiElem.textContent = emoji;
       emojiElem.style.position = 'absolute';
       emojiElem.style.fontSize = '2.5rem';
-      // Random position within the emoji-container
-      const container = document.getElementById('emoji-container');
-      const maxX = container.offsetWidth - 40;
-      const maxY = container.offsetHeight - 40;
-      const x = Math.random() * maxX;
-      const y = Math.random() * maxY;
+      // Random position anywhere in viewport
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const x = Math.random() * (vw - 40);
+      const y = Math.random() * (vh - 40);
       emojiElem.style.left = x + 'px';
       emojiElem.style.top = y + 'px';
-      container.appendChild(emojiElem);
+      document.getElementById('emoji-container').appendChild(emojiElem);
     };
 
     // Moving button logic
     const moveBtn = document.getElementById('move-btn');
     const messages = [
-      "Nice try! 😜",
-      "Missed me!",
-      "Try again!",
-      "Too slow!",
-      "Almost!",
-      "Keep chasing!"
+      "Nice try!",
+      "You wish!",
+      "You're so mean!",
+      "Stoppppp It!",
+      "Hey!!!",
+      "Miss you too!"
     ];
     moveBtn.onclick = function() {
       // Get viewport size
@@ -61,26 +96,26 @@
       const btnHeight = moveBtn.offsetHeight;
       const randLeft = Math.random() * (vw - btnWidth);
       const randTop = Math.random() * (vh - btnHeight);
-      // Place button
-      moveBtn.style.left = randLeft + "px";
-      moveBtn.style.top = randTop + "px";
       // Show message at previous location
       const msg = messages[Math.floor(Math.random() * messages.length)];
       const msgElem = document.createElement('div');
       msgElem.textContent = msg;
       msgElem.style.position = 'absolute';
-      msgElem.style.left = randLeft + "px";
-      msgElem.style.top = randTop + btnHeight + 5 + "px";
+      msgElem.style.left = moveBtn.style.left;
+      msgElem.style.top = `calc(${moveBtn.style.top} + ${btnHeight + 5}px)`;
       msgElem.style.background = "#fffbe7";
       msgElem.style.border = "1px solid #ffe066";
       msgElem.style.padding = "8px 16px";
       msgElem.style.borderRadius = "8px";
       msgElem.style.fontSize = "1.2rem";
-      msgElem.style.zIndex = 1000;
+      msgElem.style.zIndex = 2000;
       document.body.appendChild(msgElem);
       setTimeout(() => {
         msgElem.remove();
       }, 1200);
+      // Move button
+      moveBtn.style.left = randLeft + "px";
+      moveBtn.style.top = randTop + "px";
     };
   </script>
 </body>
