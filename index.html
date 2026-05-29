@@ -1,14 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>'Till Next Time</title>
   <style>
     body {
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: flex-start;
       min-height: 100vh;
       margin: 0;
       background: #f5f5f5;
@@ -18,47 +14,62 @@
       font-weight: bold;
       color: #333;
       text-align: center;
-      margin-top: 20px;
+      margin-top: 40px;
+      margin-bottom: 40px;
     }
     h1 {
       font-family: sans-serif;
       color: #444;
+      margin-top: 60px;
+    }
+    #emoji-container {
+      position: relative;
+      width: 100vw;
+      height: 60vh;
     }
   </style>
 </head>
 <body>
   <h1>'Till Next Time</h1>
   <p id="demo"></p>
+  <button id="emoji-btn" style="font-size:1.5rem; margin-top:30px;">Click If You Miss Me</button>
+  <div id="emoji-container"></div>
 
   <script>
-    // Set the date we're counting down to
+    // Countdown timer
     var countDownDate = new Date("June 4, 2026 05:00:00").getTime();
-
-    // Update the count down every 1 second
     var x = setInterval(function() {
-
-      // Get today's date and time
       var now = new Date().getTime();
-
-      // Find the distance between now and the count down date
       var distance = countDownDate - now;
-
-      // Time calculations for days, hours, minutes and seconds
       var days = Math.floor(distance / (1000 * 60 * 60 * 24));
       var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      // Display the result in the element with id="demo"
       document.getElementById("demo").innerHTML = days + "d " + hours + "h "
       + minutes + "m " + seconds + "s ";
-
-      // If the count down is finished, write some text
       if (distance < 0) {
         clearInterval(x);
         document.getElementById("demo").innerHTML = "EXPIRED";
       }
     }, 1000);
+
+    // Emoji button logic
+    const emojis = ["💜", "😘", "🫦", "💚", "🫂", "🫶"];
+    document.getElementById('emoji-btn').onclick = function() {
+      const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+      const emojiElem = document.createElement('span');
+      emojiElem.textContent = emoji;
+      emojiElem.style.position = 'absolute';
+      emojiElem.style.fontSize = '2.5rem';
+      // Random position within the emoji-container
+      const container = document.getElementById('emoji-container');
+      const maxX = container.offsetWidth - 40;
+      const maxY = container.offsetHeight - 40;
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+      emojiElem.style.left = x + 'px';
+      emojiElem.style.top = y + 'px';
+      container.appendChild(emojiElem);
+    };
   </script>
 </body>
-</html>
