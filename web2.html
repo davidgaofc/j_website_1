@@ -151,6 +151,7 @@
     const maxIndex = dialogues.length - 1;
     let unlockedIndex = 0;
     let currentIndex = 0;
+    let hasUserNavigated = false;
 
     const dayLabelEl = document.getElementById("day-label");
     const bubbleLeftEl = document.getElementById("bubble-left");
@@ -200,7 +201,7 @@
         unlockedIndex = maxIndex;
       }
 
-      if (currentIndex < unlockedIndex) {
+      if (!hasUserNavigated && currentIndex < unlockedIndex) {
         currentIndex = unlockedIndex;
       }
 
@@ -208,10 +209,12 @@
     }
 
     prevBtn.addEventListener("click", () => {
+      hasUserNavigated = true;
       showDialogue(currentIndex - 1);
     });
 
     nextBtn.addEventListener("click", () => {
+      hasUserNavigated = true;
       showDialogue(currentIndex + 1);
     });
 
