@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chats of Affirmation</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #fdf2f8, #f5e7ff);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .box {
+      background: white;
+      padding: 32px 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #7c3aed;
+      font-size: 1.5rem;
+    }
+
+    #day-label {
+      font-size: 1rem;
+      color: #7c3aed;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    #comic {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .speaker {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    .speaker-right {
+      justify-content: flex-end;
+    }
+
+    .emoji {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .bubble {
+      background: #fff4fb;
+      border: 2px solid #d8b4fe;
+      border-radius: 18px;
+      padding: 10px 14px;
+      color: #4c1d95;
+      font-size: 1rem;
+      min-height: 44px;
+      max-width: 280px;
+      box-shadow: 0 4px 10px rgba(124, 58, 237, 0.08);
+    }
+
+    .speaker-right .bubble {
+      background: #f5e7ff;
+    }
+
+    .bubble.locked {
+      color: #9ca3af;
+      font-style: italic;
+      border-color: #e9d5ff;
+      background: #faf5ff;
+    }
+
+    #countdown {
+      margin-top: 10px;
+      color: #7c3aed;
+      font-size: 0.95rem;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 999px;
+      background: #7c3aed;
+      color: white;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    button:hover {
+      background: #6d28d9;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>Chats of Affirmation</h1>
+    <div id="day-label"></div>
+    <div id="comic">
+      <div class="speaker speaker-left">
+        <div class="emoji">💜</div>
+        <div class="bubble" id="bubble-left"></div>
+      </div>
+      <div class="speaker speaker-right">
+        <div class="bubble" id="bubble-right"></div>
+        <div class="emoji">💚</div>
+      </div>
+    </div>
+    <div id="countdown"></div>
+    <div class="controls">
+      <button id="prevBtn">← Back</button>
+      <button id="nextBtn">Next →</button>
+    </div>
+  </div>
+
+  <script>
+    const startDate = new Date("2026-07-26T00:00:00");
+    const finalUnlockDate = new Date("2026-08-03T00:00:00");
+    const msPerDay = 24 * 60 * 60 * 1000;
+    const dialogues = [
+      { left: "We are so far apart!", right: "Yeah, I miss you!" },
+      { left: "Do you actually miss me?", right: "Yes, even if I don't show it!" },
+      { left: "Even when I'm cranky?", right: "Yes, I still love you then." },
+      { left: "Why?", right: "I committed to this relationship, so I will try to love you always." },
+      { left: "There's a lot of things outside our control.", right: "Yes, we will take it one step at a time." },
+      { left: "What if we don't make it?", right: "It will have been worth it to try and love you." },
+      { left: "How can we make the most of this?", right: "By never taking anything for granted." },
+      { left: "Will we always try to have a good time together?", right: "That's what we do. Through the highs and lows." },
+      { left: "We'll try our best.", right: "Yes, we will." }
+    ];
+    const maxIndex = dialogues.length - 1;
+    let unlockedIndex = 0;
+    let currentIndex = 0;
+
+    const dayLabelEl = document.getElementById("day-label");
+    const bubbleLeftEl = document.getElementById("bubble-left");
+    const bubbleRightEl = document.getElementById("bubble-right");
+    const countdownEl = document.getElementById("countdown");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    function formatCountdown(ms) {
+      const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    function showDialogue(index) {
+      currentIndex = Math.max(0, Math.min(index, maxIndex));
+      dayLabelEl.textContent = `Day ${currentIndex + 1}`;
+
+      if (currentIndex > unlockedIndex) {
+        const unlockDate = new Date(startDate.getTime() + currentIndex * msPerDay);
+        const timeLeft = unlockDate - new Date();
+        bubbleLeftEl.textContent = "...";
+        bubbleRightEl.textContent = "...";
+        bubbleLeftEl.classList.add("locked");
+        bubbleRightEl.classList.add("locked");
+        countdownEl.textContent = `Locked — unlocks in ${formatCountdown(timeLeft)}`;
+      } else {
+        const entry = dialogues[currentIndex];
+        bubbleLeftEl.textContent = entry.left;
+        bubbleRightEl.textContent = entry.right;
+        bubbleLeftEl.classList.remove("locked");
+        bubbleRightEl.classList.remove("locked");
+        countdownEl.textContent = "";
+      }
+    }
+
+    function updateUnlockedState() {
+      const now = new Date();
+      const effectiveFinalDate = new Date(finalUnlockDate.getTime() + msPerDay);
+      const unlockedDays = Math.min(Math.floor((now - startDate) / msPerDay), maxIndex);
+      unlockedIndex = Math.min(unlockedDays, maxIndex);
+
+      if (now >= effectiveFinalDate) {
+        unlockedIndex = maxIndex;
+      }
+
+      if (currentIndex < unlockedIndex) {
+        currentIndex = unlockedIndex;
+      }
+
+      showDialogue(currentIndex);
+    }
+
+    prevBtn.addEventListener("click", () => {
+      showDialogue(currentIndex - 1);
+    });
+
+    nextBtn.addEventListener("click", () => {
+      showDialogue(currentIndex + 1);
+    });
+
+    setInterval(updateUnlockedState, 1000);
+    updateUnlockedState();
+  </script>
+</body>
+</html>

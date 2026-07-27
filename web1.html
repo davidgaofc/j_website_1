@@ -1,0 +1,138 @@
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      background: #f5f5f5;
+    }
+    #demo {
+      font-size: 8vw; /* Slightly smaller clock */
+      font-weight: bold;
+      color: #333;
+      text-align: center;
+      margin-top: 7vw;
+      margin-bottom: 7vw;
+    }
+    h1 {
+      font-family: sans-serif;
+      color: #444;
+      margin-top: 8vw;
+      font-size: 7vw;
+      text-align: center;
+    }
+    #emoji-container {
+      position: fixed;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 999;
+    }
+    #emoji-btn, #move-btn {
+      position: relative;
+      z-index: 1001;
+      font-size: 7vw !important; /* Slightly smaller buttons */
+      padding: 3vw 6vw;
+      margin-top: 5vw;
+      border-radius: 2vw;
+      border: none;
+      background: #fffbe7;
+      color: #444;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    @media (min-width: 600px) {
+      #demo { font-size: 3rem; margin-top: 40px; margin-bottom: 40px; }
+      h1 { font-size: 3rem; margin-top: 60px; }
+      #emoji-btn, #move-btn { font-size: 1.5rem !important; padding: 12px 24px; border-radius: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>'Till Next Time</h1>
+  <p id="demo"></p>
+  <button id="emoji-btn">Click If You Miss Me</button>
+  <button id="move-btn" style="position:absolute; left:50vw; top:80vh;">Click If You Don't Miss Me</button>
+  <div id="emoji-container"></div>
+
+  <script>
+    // Countdown timer
+    var countDownDate = new Date("June 4, 2026 05:00:00").getTime();
+    var x = setInterval(function() {
+      var now = new Date().getTime();
+      var distance = countDownDate - now;
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+      + minutes + "m " + seconds + "s ";
+      if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("demo").innerHTML = "EXPIRED";
+      }
+    }, 1000);
+
+    // Emoji button logic (random anywhere on page)
+    const emojis = ["💜", "😘", "🫦", "💚", "🫂", "🫶"];
+    document.getElementById('emoji-btn').onclick = function() {
+      const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+      const emojiElem = document.createElement('span');
+      emojiElem.textContent = emoji;
+      emojiElem.style.position = 'absolute';
+      emojiElem.style.fontSize = '10vw'; // Slightly smaller emoji
+      // Random position anywhere in viewport
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const x = Math.random() * (vw - 40);
+      const y = Math.random() * (vh - 40);
+      emojiElem.style.left = x + 'px';
+      emojiElem.style.top = y + 'px';
+      document.getElementById('emoji-container').appendChild(emojiElem);
+    };
+
+    // Moving button logic
+    const moveBtn = document.getElementById('move-btn');
+    const messages = [
+      "Nice try!",
+      "You wish!",
+      "You're so mean!",
+      "Stoppppp It!",
+      "Hey!!!",
+      "Miss you too!"
+    ];
+    moveBtn.onclick = function() {
+      // Get viewport size
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      // Random position (avoid edges)
+      const btnWidth = moveBtn.offsetWidth;
+      const btnHeight = moveBtn.offsetHeight;
+      const randLeft = Math.random() * (vw - btnWidth);
+      const randTop = Math.random() * (vh - btnHeight);
+      // Show message at previous location
+      const msg = messages[Math.floor(Math.random() * messages.length)];
+      const msgElem = document.createElement('div');
+      msgElem.textContent = msg;
+      msgElem.style.position = 'absolute';
+      msgElem.style.left = moveBtn.style.left;
+      msgElem.style.top = `calc(${moveBtn.style.top} + ${btnHeight + 5}px)`;
+      msgElem.style.background = "#fffbe7";
+      msgElem.style.border = "1px solid #ffe066";
+      msgElem.style.padding = "3vw 5vw";
+      msgElem.style.borderRadius = "2vw";
+      msgElem.style.fontSize = "4vw";
+      msgElem.style.zIndex = 2000;
+      msgElem.style.textAlign = "center";
+      document.body.appendChild(msgElem);
+      setTimeout(() => {
+        msgElem.remove();
+      }, 1200);
+      // Move button
+      moveBtn.style.left = randLeft + "px";
+      moveBtn.style.top = randTop + "px";
+    };
+  </script>
+</body>
