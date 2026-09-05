@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Angel Warrior Dash</title>
+  <style>
+    :root {
+      --ink: #1d2a4f;
+      --muted: #586d93;
+      --cream: #fffdf7;
+      --sky: #9dc9ff;
+      --gold: #f8c75d;
+      --wings: #dfe8ff;
+      --rose: #f7a7b5;
+      --teal: #3b9aa8;
+      --violet: #5d4c9a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 24px;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255,255,255,.75) 0 6%, transparent 6.4%),
+        radial-gradient(circle at 80% 14%, rgba(255,255,255,.6) 0 5%, transparent 5.5%),
+        linear-gradient(180deg, #d8eeff 0%, #b6d8ff 32%, #a487ff 100%);
+    }
+
+    .game-shell {
+      width: min(100%, 900px);
+      padding: clamp(20px, 4vw, 38px);
+      border: 1px solid rgba(255, 255, 255, .7);
+      border-radius: 20px;
+      background: rgba(255, 253, 247, .92);
+      box-shadow: 0 24px 70px rgba(69, 46, 116, .22);
+    }
+
+    .heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .eyebrow {
+      margin: 0 0 6px;
+      color: var(--violet);
+      font: 700 .76rem/1.2 "Trebuchet MS", sans-serif;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.7rem);
+      line-height: .95;
+      letter-spacing: -.04em;
+    }
+
+    .tagline {
+      max-width: 270px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.45;
+      text-align: right;
+    }
+
+    .game-card {
+      position: relative;
+      overflow: hidden;
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      background: linear-gradient(180deg, #bde6ff 0%, #87c2ff 54%, #cce9c2 100%);
+      box-shadow: 7px 7px 0 var(--ink);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 8;
+      min-height: 250px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .hud {
+      position: absolute;
+      inset: 14px 16px auto;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+      color: white;
+      font: 700 .78rem/1.2 "Trebuchet MS", sans-serif;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 3px rgba(23, 50, 77, .6);
+    }
+
+    .hud span { display: block; }
+    .hud strong { font-size: 1.35rem; letter-spacing: 0; }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      text-align: center;
+      background: rgba(20, 34, 68, .18);
+    }
+
+    .overlay[hidden] { display: none; }
+
+    .panel {
+      max-width: 360px;
+      padding: 22px 24px 20px;
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      background: rgba(255, 253, 247, .96);
+      box-shadow: 5px 5px 0 var(--ink);
+    }
+
+    .panel h2 { margin: 0 0 8px; font-size: 1.7rem; }
+    .panel p { margin: 0 0 16px; color: var(--muted); line-height: 1.45; }
+
+    button {
+      border: 0;
+      border-radius: 7px;
+      padding: 12px 20px;
+      color: white;
+      background: var(--teal);
+      font: 700 .9rem "Trebuchet MS", sans-serif;
+      cursor: pointer;
+      box-shadow: 0 3px 0 #0f5d68;
+    }
+
+    button:hover { background: #167d8c; }
+    button:active { transform: translateY(2px); box-shadow: 0 1px 0 #0f5d68; }
+
+    .instructions {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 23px 0 0;
+      color: var(--muted);
+      font: .84rem/1.4 "Trebuchet MS", sans-serif;
+    }
+
+    .instructions span:last-child { text-align: right; }
+    a { color: var(--teal); font-weight: 700; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    @media (max-width: 560px) {
+      body { padding: 13px; }
+      .heading { display: block; }
+      .tagline { margin-top: 10px; text-align: left; }
+      canvas { min-height: 210px; }
+      .instructions { display: block; }
+      .instructions span:last-child { margin-top: 9px; text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <main class="game-shell">
+    <header class="heading">
+      <div>
+        <p class="eyebrow">Heavenly retail run</p>
+        <h1>Angel Warrior Dash</h1>
+      </div>
+      <p class="tagline">Fly past the city chaos, grab the shopping bags, and save the day with a little sparkle.</p>
+    </header>
+
+    <section class="game-card" aria-label="Angel Warrior Dash game">
+      <canvas id="game" width="960" height="480" aria-label="Runner game canvas"></canvas>
+      <div class="hud" aria-live="polite">
+        <span>Bags <strong id="bags">0</strong></span>
+        <span>Cash <strong id="cash">0</strong></span>
+        <span>Best <strong id="best">0</strong></span>
+      </div>
+      <div class="overlay" id="overlay">
+        <div class="panel">
+          <h2 id="overlay-title">Guardian of the mall</h2>
+          <p id="overlay-copy">Jump over the textbooks and hospitals, then snatch the shopping bags and cash for the heavenly haul.</p>
+          <button id="start-button" type="button">Start the run</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="instructions">
+      <span>Press <strong>Space</strong>, <strong>↑</strong>, click, or tap to jump</span>
+      <span><a href="index.html">Back to home</a></span>
+    </div>
+  </main>
+
+  <script>
+    const canvas = document.getElementById("game");
+    const context = canvas.getContext("2d");
+    const bagsElement = document.getElementById("bags");
+    const cashElement = document.getElementById("cash");
+    const bestElement = document.getElementById("best");
+    const overlay = document.getElementById("overlay");
+    const overlayTitle = document.getElementById("overlay-title");
+    const overlayCopy = document.getElementById("overlay-copy");
+    const startButton = document.getElementById("start-button");
+
+    const world = { width: canvas.width, height: canvas.height, ground: 388 };
+    const player = { x: 125, y: 326, width: 42, height: 62, velocityY: 0, jumping: false };
+    const game = {
+      running: false,
+      score: 0,
+      bags: 0,
+      cash: 0,
+      speed: 6,
+      distance: 0,
+      nextObstacle: 420,
+      nextBag: 180,
+      nextCash: 360,
+      lastTime: 0,
+      obstacles: [],
+      bagsOnTrack: [],
+      cashOnTrack: []
+    };
+    let best = Number(localStorage.getItem("angelWarriorBest") || 0);
+    bestElement.textContent = best;
+
+    function resetGame() {
+      game.running = true;
+      game.score = 0;
+      game.bags = 0;
+      game.cash = 0;
+      game.speed = 6;
+      game.distance = 0;
+      game.nextObstacle = 360 + Math.random() * 360;
+      game.nextBag = 180;
+      game.nextCash = 340;
+      game.obstacles = [];
+      game.bagsOnTrack = [];
+      game.cashOnTrack = [];
+      player.y = 326;
+      player.velocityY = 0;
+      player.jumping = false;
+      overlay.hidden = true;
+      updateHud();
+      requestAnimationFrame(loop);
+    }
+
+    function jump() {
+      if (!game.running) return;
+      if (!player.jumping) {
+        player.velocityY = -14.5;
+        player.jumping = true;
+      }
+    }
+
+    function updateHud() {
+      bagsElement.textContent = game.bags;
+      cashElement.textContent = game.cash;
+      bestElement.textContent = best;
+    }
+
+    function addObstacle() {
+      const kind = Math.random() > 0.5 ? "textbook" : "hospital";
+      const height = kind === "textbook" ? 44 : 52;
+      const width = kind === "textbook" ? 34 : 38;
+      game.obstacles.push({
+        x: world.width + 20,
+        y: world.ground - height,
+        width,
+        height,
+        kind
+      });
+    }
+
+    function addBag() {
+      game.bagsOnTrack.push({ x: world.width + 25, y: 250 + Math.random() * 85, radius: 14, spin: 0 });
+    }
+
+    function addCash() {
+      game.cashOnTrack.push({ x: world.width + 25, y: 210 + Math.random() * 90, radius: 14, spin: 0 });
+    }
+
+    function intersects(first, second) {
+      return first.x < second.x + second.width && first.x + first.width > second.x && first.y < second.y + second.height && first.y + first.height > second.y;
+    }
+
+    function update(delta) {
+      const movement = game.speed * delta;
+      game.distance += movement;
+      game.score = Math.floor(game.distance / 10) + game.bags * 25 + game.cash * 10;
+      game.speed = Math.min(12, 6 + game.distance / 1800);
+
+      player.velocityY += 0.72 * delta;
+      player.y += player.velocityY * delta;
+      if (player.y >= 326) {
+        player.y = 326;
+        player.velocityY = 0;
+        player.jumping = false;
+      }
+
+      if (game.distance >= game.nextObstacle) {
+        addObstacle();
+        game.nextObstacle = game.distance + 300 + Math.random() * 520;
+      }
+      if (game.distance >= game.nextBag) {
+        addBag();
+        game.nextBag = game.distance + 260 + Math.random() * 180;
+      }
+      if (game.distance >= game.nextCash) {
+        addCash();
+        game.nextCash = game.distance + 320 + Math.random() * 220;
+      }
+
+      game.obstacles.forEach(obstacle => obstacle.x -= movement);
+      game.bagsOnTrack.forEach(item => { item.x -= movement; item.spin += .16 * delta; });
+      game.cashOnTrack.forEach(item => { item.x -= movement; item.spin += .16 * delta; });
+
+      game.obstacles = game.obstacles.filter(obstacle => obstacle.x + obstacle.width > -30);
+      game.bagsOnTrack = game.bagsOnTrack.filter(item => item.x + item.radius > -20);
+      game.cashOnTrack = game.cashOnTrack.filter(item => item.x + item.radius > -20);
+
+      const hitbox = { x: player.x + 7, y: player.y + 7, width: player.width - 13, height: player.height - 9 };
+      for (const obstacle of game.obstacles) {
+        if (intersects(hitbox, obstacle)) return endGame();
+      }
+
+      game.bagsOnTrack = game.bagsOnTrack.filter(item => {
+        const collected = Math.hypot(player.x + player.width / 2 - item.x, player.y + player.height / 2 - item.y) < 30;
+        if (collected) game.bags++;
+        return !collected;
+      });
+
+      game.cashOnTrack = game.cashOnTrack.filter(item => {
+        const collected = Math.hypot(player.x + player.width / 2 - item.x, player.y + player.height / 2 - item.y) < 30;
+        if (collected) game.cash += 25;
+        return !collected;
+      });
+
+      updateHud();
+    }
+
+    function endGame() {
+      game.running = false;
+      if (game.score > best) {
+        best = game.score;
+        localStorage.setItem("angelWarriorBest", best);
+      }
+      updateHud();
+      overlayTitle.textContent = "Heavenly run over!";
+      overlayCopy.textContent = `You saved ${game.bags} shopping bags and earned $${game.cash}. Ready for another heavenly sprint?`;
+      startButton.textContent = "Run again";
+      overlay.hidden = false;
+    }
+
+    function drawBackground() {
+      const sky = context.createLinearGradient(0, 0, 0, world.height);
+      sky.addColorStop(0, "#dfeeff");
+      sky.addColorStop(0.5, "#9ac5ff");
+      sky.addColorStop(1, "#d8e8c4");
+      context.fillStyle = sky;
+      context.fillRect(0, 0, world.width, world.height);
+
+      context.fillStyle = "rgba(255,255,255,0.7)";
+      for (let i = 0; i < 10; i++) {
+        const x = (i * 110 + (game.distance * 0.08) % 140) % (world.width + 80) - 40;
+        const y = 50 + (i % 4) * 36;
+        context.beginPath(); context.arc(x, y, 18, 0, Math.PI * 2); context.arc(x + 18, y - 8, 16, 0, Math.PI * 2); context.arc(x + 36, y, 18, 0, Math.PI * 2); context.fill();
+      }
+
+      for (let i = 0; i < 6; i++) {
+        const x = 70 + i * 150 - (game.distance * 0.25) % 170;
+        context.fillStyle = "rgba(255,255,255,0.18)";
+        context.fillRect(x, 300 + (i % 2) * 18, 140, 70);
+        context.fillRect(x + 18, 284 + (i % 2) * 18, 26, 16);
+        context.fillRect(x + 86, 284 + (i % 2) * 18, 26, 16);
+      }
+
+      context.fillStyle = "#2b6276";
+      context.fillRect(0, world.ground, world.width, world.height - world.ground);
+      context.fillStyle = "#ddf3ff";
+      context.fillRect(0, world.ground + 12, world.width, 5);
+      context.strokeStyle = "rgba(255, 255, 255, 0.45)";
+      context.lineWidth = 3;
+      for (let x = -(game.distance % 80); x < world.width; x += 80) {
+        context.beginPath(); context.moveTo(x, 438); context.lineTo(x + 36, 438); context.stroke();
+      }
+    }
+
+    function drawPlayer() {
+      const bob = game.running && !player.jumping ? Math.sin(game.distance / 14) * 2 : 0;
+      context.save();
+      context.translate(player.x, player.y + bob);
+
+      context.fillStyle = "#f4f8ff";
+      context.beginPath();
+      context.ellipse(20, 15, 14, 18, 0, 0, Math.PI * 2);
+      context.fill();
+
+      context.fillStyle = "#dfe8ff";
+      context.beginPath();
+      context.moveTo(10, 12); context.lineTo(-4, 3); context.lineTo(4, 28); context.lineTo(18, 20); context.closePath();
+      context.moveTo(30, 12); context.lineTo(46, 3); context.lineTo(38, 28); context.lineTo(22, 20); context.closePath();
+      context.fill();
+
+      context.fillStyle = "#f8c75d";
+      context.fillRect(12, 30, 18, 26);
+      context.fillStyle = "#ffffff";
+      context.fillRect(14, 10, 4, 4); context.fillRect(24, 10, 4, 4);
+      context.strokeStyle = "#1d2a4f";
+      context.lineWidth = 3;
+      context.beginPath(); context.moveTo(14, 57); context.lineTo(10, 70); context.moveTo(28, 57); context.lineTo(32, 70); context.stroke();
+
+      context.strokeStyle = "#f8c75d";
+      context.lineWidth = 5;
+      context.lineCap = "round";
+      context.beginPath(); context.moveTo(34, 34); context.lineTo(52, 24); context.stroke();
+      context.strokeStyle = "#e9a7b6";
+      context.beginPath(); context.moveTo(14, 18); context.lineTo(8, 24); context.moveTo(26, 18); context.lineTo(32, 24); context.stroke();
+      context.restore();
+    }
+
+    function drawObjects() {
+      game.obstacles.forEach(obstacle => {
+        context.save();
+        context.translate(obstacle.x, obstacle.y);
+        if (obstacle.kind === "textbook") {
+          context.fillStyle = "#d4b16e";
+          context.fillRect(0, 0, obstacle.width, obstacle.height);
+          context.strokeStyle = "#ffffff";
+          context.lineWidth = 2;
+          context.strokeRect(3, 3, obstacle.width - 6, obstacle.height - 6);
+          context.font = "22px 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif";
+          context.fillText("📚", 5, obstacle.height - 8);
+        } else {
+          context.fillStyle = "#b7e1d1";
+          context.fillRect(0, 0, obstacle.width, obstacle.height);
+          context.strokeStyle = "#ffffff";
+          context.lineWidth = 2;
+          context.strokeRect(3, 3, obstacle.width - 6, obstacle.height - 6);
+          context.font = "22px 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif";
+          context.fillText("🏥", 4, obstacle.height - 7);
+        }
+        context.restore();
+      });
+
+      game.bagsOnTrack.forEach(item => {
+        context.save();
+        context.translate(item.x, item.y);
+        context.rotate(item.spin);
+        context.font = "26px 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif";
+        context.fillText("🛍️", -14, 10);
+        context.restore();
+      });
+
+      game.cashOnTrack.forEach(item => {
+        context.save();
+        context.translate(item.x, item.y);
+        context.rotate(item.spin);
+        context.font = "26px 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif";
+        context.fillText("💰", -14, 12);
+        context.restore();
+      });
+    }
+
+    function draw() {
+      drawBackground();
+      drawObjects();
+      drawPlayer();
+    }
+
+    function loop(timestamp) {
+      if (!game.running) { draw(); return; }
+      const delta = Math.min(2, (timestamp - game.lastTime) / 16.67 || 1);
+      game.lastTime = timestamp;
+      update(delta);
+      draw();
+      if (game.running) requestAnimationFrame(loop);
+    }
+
+    startButton.addEventListener("click", resetGame);
+    canvas.addEventListener("pointerdown", jump);
+    document.addEventListener("keydown", event => {
+      if (event.code === "Space" || event.code === "ArrowUp") {
+        event.preventDefault();
+        if (!game.running) resetGame(); else jump();
+      }
+    });
+    draw();
+  </script>
+</body>
+</html>
