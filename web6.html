@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Birthday Cake Surprise</title>
+  <style>
+    :root {
+      --ink: #29213f;
+      --muted: #786b91;
+      --paper: #fffaf2;
+      --peach: #ffb38f;
+      --coral: #ec6f68;
+      --berry: #a9426d;
+      --lemon: #ffd76a;
+      --mint: #9ed8c1;
+      --sky: #a7d7ee;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 24px;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at 12% 15%, rgba(255,255,255,.8) 0 5%, transparent 5.4%),
+        radial-gradient(circle at 88% 18%, rgba(255,255,255,.7) 0 4%, transparent 4.4%),
+        linear-gradient(145deg, #ffe4cb 0%, #f8b4bb 52%, #b9c4ed 100%);
+    }
+
+    .party-shell {
+      width: min(100%, 1240px);
+      padding: clamp(20px, 4vw, 40px);
+      border: 1px solid rgba(255,255,255,.85);
+      border-radius: 20px;
+      background: rgba(255, 250, 242, .93);
+      box-shadow: 0 24px 70px rgba(96, 50, 83, .2);
+    }
+
+    header { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 22px; }
+    .eyebrow { margin: 0 0 7px; color: var(--berry); font: 700 .76rem/1.2 "Trebuchet MS", sans-serif; letter-spacing: .16em; text-transform: uppercase; }
+    h1 { margin: 0; max-width: 560px; font-size: clamp(2.2rem, 5vw, 4.25rem); line-height: .92; letter-spacing: -.04em; }
+    .intro { max-width: 255px; margin: 0; color: var(--muted); font-size: 1rem; line-height: 1.45; text-align: right; }
+
+    .cake-stage {
+      position: relative;
+      min-height: 505px;
+      overflow: hidden;
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      background:
+        linear-gradient(transparent 72%, rgba(255,255,255,.35) 72%),
+        radial-gradient(circle at 50% 24%, rgba(255,255,255,.75), transparent 32%),
+        linear-gradient(180deg, var(--sky) 0%, #d5ecdf 100%);
+      box-shadow: 7px 7px 0 var(--ink);
+    }
+
+    .stage-note { position: absolute; top: 17px; left: 20px; margin: 0; color: #4d527a; font: 700 .78rem "Trebuchet MS", sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+    .countdown { position: absolute; top: 14px; right: 18px; color: var(--berry); font: 700 .9rem "Trebuchet MS", sans-serif; }
+    .countdown strong { display: inline-block; min-width: 2ch; font-size: 1.35rem; text-align: right; }
+
+    .cake { position: absolute; left: 50%; top: 50%; width: 270px; height: 270px; transform: translate(-50%, -38%); transition: opacity .4s; }
+    .cake.exploded { opacity: 0; pointer-events: none; animation: cakeBlast .65s ease-out forwards; }
+    @keyframes cakeBlast { 0% { opacity: 1; transform: translate(-50%, -38%) scale(1); } 45% { opacity: 1; transform: translate(-50%, -38%) scale(1.08); } 100% { opacity: 0; transform: translate(-50%, -38%) scale(.82); } }
+    .plate { position: absolute; bottom: 5px; left: 50%; width: 320px; height: 30px; transform: translateX(-50%); border: 3px solid var(--ink); border-radius: 50%; background: #fff; box-shadow: 0 7px 0 rgba(41,33,63,.18); }
+    .tier { position: absolute; left: 50%; transform: translateX(-50%); border: 3px solid var(--ink); border-radius: 12px 12px 9px 9px; }
+    .tier-bottom { bottom: 27px; width: 238px; height: 91px; background: var(--coral); }
+    .tier-top { bottom: 105px; width: 178px; height: 75px; background: #f7957d; }
+    .icing { position: absolute; left: 50%; z-index: 2; height: 28px; transform: translateX(-50%); border: 3px solid var(--ink); border-radius: 50%; background: var(--paper); }
+    .icing-bottom { bottom: 101px; width: 239px; }
+    .icing-top { bottom: 166px; width: 179px; }
+    .drip { position: absolute; z-index: 3; width: 18px; height: 26px; border: 3px solid var(--ink); border-top: 0; border-radius: 0 0 12px 12px; background: var(--paper); }
+    .drip.one { left: 80px; bottom: 89px; }
+    .drip.two { right: 75px; bottom: 89px; height: 35px; }
+    .drip.three { left: 131px; bottom: 151px; height: 31px; }
+    .cherry { position: absolute; z-index: 4; bottom: 51px; width: 17px; height: 17px; border: 3px solid var(--ink); border-radius: 50%; background: var(--berry); }
+    .cherry.one { left: 67px; } .cherry.two { right: 65px; } .cherry.three { left: 50%; bottom: 117px; }
+    .candle { position: absolute; z-index: 5; bottom: 174px; left: 50%; width: 20px; height: 73px; transform: translateX(-50%); border: 3px solid var(--ink); border-radius: 7px 7px 3px 3px; background: repeating-linear-gradient(135deg, #fff 0 8px, var(--berry) 8px 14px); }
+    .flame { position: absolute; top: -29px; left: 50%; width: 22px; height: 30px; transform: translateX(-50%) rotate(45deg); border: 3px solid var(--ink); border-radius: 50% 8px 50% 8px; background: var(--lemon); animation: flicker .65s infinite alternate ease-in-out; }
+    @keyframes flicker { to { transform: translateX(-50%) rotate(45deg) scale(.8); } }
+
+    .burst { position: absolute; inset: 0; pointer-events: none; }
+    .burst.revealed::before { content: ""; position: absolute; left: 50%; top: 50%; z-index: 2; width: 92px; height: 92px; border: 5px solid var(--lemon); border-radius: 50%; transform: translate(-50%, -50%) scale(.2); opacity: 0; box-shadow: 0 0 0 12px rgba(255,255,255,.65), 0 0 35px 16px rgba(255,215,106,.8); animation: shockwave 1.15s cubic-bezier(.1,.7,.3,1) forwards; }
+    .burst.revealed::after { content: ""; position: absolute; left: 50%; top: 50%; z-index: 3; width: 75px; height: 75px; border-radius: 50%; transform: translate(-50%, -50%) scale(.15); background: white; opacity: 0; animation: flash .48s ease-out forwards; }
+    @keyframes shockwave { 0% { opacity: 1; transform: translate(-50%, -50%) scale(.2); } 65% { opacity: .9; } 100% { opacity: 0; transform: translate(-50%, -50%) scale(5); } }
+    @keyframes flash { 0% { opacity: .95; transform: translate(-50%, -50%) scale(.15); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(2.4); } }
+    @property --bob { syntax: "<length>"; inherits: false; initial-value: 0px; }
+    .piece { position: absolute; left: 50%; top: 50%; z-index: 4; display: grid; place-items: center; width: 50px; height: 50px; border: 3px solid var(--ink); border-radius: 12px; color: var(--ink); background: var(--lemon); font: 700 1.15rem "Trebuchet MS", sans-serif; box-shadow: 3px 3px 0 rgba(41,33,63,.25); opacity: 0; cursor: pointer; pointer-events: none; transform: translate(-50%, -50%) rotate(0deg) scale(.2); }
+    .piece:nth-child(3n) { background: var(--mint); } .piece:nth-child(3n + 1) { background: var(--peach); }
+    .exploded + .burst .piece, .burst.revealed .piece { animation: fly 1.15s cubic-bezier(.2,.8,.2,1) forwards; pointer-events: auto; }
+    .piece:hover, .piece:focus-visible { outline: 3px solid white; outline-offset: 3px; }
+    @keyframes fly { from { opacity: 0; transform: translate(-50%, -50%) rotate(0deg) scale(.2); } to { opacity: 1; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) rotate(var(--r)) scale(1); } }
+    @keyframes bounce { 0%, 100% { --bob: 0px; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y) + var(--bob))) rotate(var(--r)); } 50% { --bob: -12px; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y) + var(--bob))) rotate(var(--r)); } }
+    .piece:nth-child(1) { --x: -290px; --y: -175px; --r: -27deg; } .piece:nth-child(2) { --x: -220px; --y: -205px; --r: 18deg; } .piece:nth-child(3) { --x: -145px; --y: -220px; --r: -14deg; } .piece:nth-child(4) { --x: -70px; --y: -235px; --r: 21deg; } .piece:nth-child(5) { --x: 10px; --y: -230px; --r: -19deg; } .piece:nth-child(6) { --x: 90px; --y: -220px; --r: 25deg; } .piece:nth-child(7) { --x: 170px; --y: -205px; --r: -22deg; } .piece:nth-child(8) { --x: 245px; --y: -175px; --r: 17deg; } .piece:nth-child(9) { --x: -295px; --y: -70px; --r: -24deg; } .piece:nth-child(10) { --x: -215px; --y: -80px; --r: 20deg; } .piece:nth-child(11) { --x: -135px; --y: -85px; --r: -16deg; } .piece:nth-child(12) { --x: 135px; --y: -85px; --r: 23deg; } .piece:nth-child(13) { --x: 215px; --y: -80px; --r: -19deg; } .piece:nth-child(14) { --x: 295px; --y: -70px; --r: 15deg; } .piece:nth-child(15) { --x: -285px; --y: 45px; --r: 22deg; } .piece:nth-child(16) { --x: -205px; --y: 55px; --r: -20deg; } .piece:nth-child(17) { --x: -125px; --y: 45px; --r: 14deg; } .piece:nth-child(18) { --x: 125px; --y: 45px; --r: -18deg; } .piece:nth-child(19) { --x: 205px; --y: 55px; --r: 25deg; } .piece:nth-child(20) { --x: 285px; --y: 45px; --r: -13deg; } .piece:nth-child(21) { --x: -245px; --y: 155px; --r: 18deg; } .piece:nth-child(22) { --x: -160px; --y: 170px; --r: -24deg; } .piece:nth-child(23) { --x: 160px; --y: 170px; --r: 20deg; } .piece:nth-child(24) { --x: 245px; --y: 155px; --r: -17deg; } .piece:nth-child(25) { --x: 0px; --y: 185px; --r: 12deg; }
+
+    .message { position: absolute; left: 50%; bottom: 16px; z-index: 8; width: min(92%, 570px); padding: 12px 19px; transform: translateX(-50%) translateY(20px); border: 3px solid var(--ink); border-radius: 10px; color: var(--ink); background: rgba(255,250,242,.98); box-shadow: 6px 6px 0 var(--ink), 0 0 30px rgba(255,255,255,.85); text-align: center; opacity: 0; transition: opacity .15s, transform .25s cubic-bezier(.2,.8,.2,1); }
+    .message.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .message strong { display: block; color: var(--berry); font-size: clamp(1.35rem, 4vw, 2.1rem); line-height: 1; letter-spacing: .04em; }
+    .confetti { position: absolute; width: 10px; height: 20px; top: 45%; left: 50%; opacity: 0; }
+    .burst.revealed .confetti { animation: confetti 1.1s ease-out forwards; }
+    .confetti:nth-child(13) { --x: -330px; --y: 100px; --c: var(--coral); } .confetti:nth-child(14) { --x: 270px; --y: -180px; --c: var(--berry); } .confetti:nth-child(15) { --x: -180px; --y: -220px; --c: var(--lemon); } .confetti:nth-child(16) { --x: 170px; --y: 170px; --c: var(--mint); }
+    @keyframes confetti { to { opacity: 1; background: var(--c); transform: translate(var(--x), var(--y)) rotate(220deg); } }
+
+    @media (min-width: 621px) {
+      .piece:nth-child(1) { --x: -124px; --y: -125px; } .piece:nth-child(2) { --x: -62px; --y: -125px; } .piece:nth-child(3) { --x: 0px; --y: -125px; } .piece:nth-child(4) { --x: 62px; --y: -125px; } .piece:nth-child(5) { --x: 124px; --y: -125px; }
+      .piece:nth-child(6) { --x: -203px; --y: -50px; } .piece:nth-child(7) { --x: -145px; --y: -50px; } .piece:nth-child(8) { --x: -87px; --y: -50px; } .piece:nth-child(9) { --x: -29px; --y: -50px; } .piece:nth-child(10) { --x: 29px; --y: -50px; } .piece:nth-child(11) { --x: 87px; --y: -50px; } .piece:nth-child(12) { --x: 145px; --y: -50px; } .piece:nth-child(13) { --x: 203px; --y: -50px; }
+      .piece:nth-child(14) { --x: -125px; --y: 30px; } .piece:nth-child(15) { --x: -67px; --y: 30px; } .piece:nth-child(16) { --x: 48px; --y: 30px; } .piece:nth-child(17) { --x: 106px; --y: 30px; } .piece:nth-child(18) { --x: 164px; --y: 30px; }
+      .piece:nth-child(19) { --x: -174px; --y: 120px; } .piece:nth-child(20) { --x: -116px; --y: 120px; } .piece:nth-child(21) { --x: -58px; --y: 120px; } .piece:nth-child(22) { --x: 0px; --y: 120px; } .piece:nth-child(23) { --x: 58px; --y: 120px; } .piece:nth-child(24) { --x: 116px; --y: 120px; } .piece:nth-child(25) { --x: 174px; --y: 120px; }
+    }
+
+    .footer { display: flex; justify-content: space-between; align-items: center; gap: 18px; margin-top: 24px; color: var(--muted); font: .84rem/1.4 "Trebuchet MS", sans-serif; }
+    .footer a { color: var(--berry); font-weight: 700; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+    button { border: 0; border-radius: 7px; padding: 11px 16px; color: white; background: var(--berry); font: 700 .84rem "Trebuchet MS", sans-serif; cursor: pointer; box-shadow: 0 3px 0 #71314f; }
+    button:hover { background: #8c315b; } button:active { transform: translateY(2px); box-shadow: 0 1px 0 #71314f; }
+
+    @media (max-width: 620px) {
+      body { padding: 13px; } header { display: block; } .intro { margin-top: 13px; text-align: left; } .cake-stage { min-height: 440px; } .cake { transform: translate(-50%, -38%) scale(.78); } .piece { width: 47px; height: 47px; font-size: 1.1rem; } .piece:nth-child(1) { --x: -145px; --y: -155px; } .piece:nth-child(2) { --x: -110px; --y: -205px; } .piece:nth-child(3) { --x: -45px; --y: -240px; } .piece:nth-child(4) { --x: 25px; --y: -245px; } .piece:nth-child(5) { --x: 95px; --y: -210px; } .piece:nth-child(6) { --x: 140px; --y: -150px; } .piece:nth-child(7) { --x: 155px; --y: -75px; } .piece:nth-child(8) { --x: 150px; --y: 20px; } .piece:nth-child(9) { --x: 105px; --y: 95px; } .piece:nth-child(10) { --x: 38px; --y: 125px; } .piece:nth-child(11) { --x: -40px; --y: 125px; } .piece:nth-child(12) { --x: -108px; --y: 85px; } .piece:nth-child(13) { --x: -40px; --y: -80px; } .piece:nth-child(14) { --x: 110px; --y: -80px; } .piece:nth-child(15) { --x: -145px; --y: -10px; } .piece:nth-child(16) { --x: -95px; --y: 25px; } .piece:nth-child(17) { --x: 95px; --y: 25px; } .piece:nth-child(18) { --x: 145px; --y: -10px; } .piece:nth-child(19) { --x: -145px; --y: 145px; } .piece:nth-child(20) { --x: -75px; --y: 165px; } .piece:nth-child(21) { --x: 75px; --y: 165px; } .piece:nth-child(22) { --x: 145px; --y: 145px; } .piece:nth-child(23) { --x: -145px; --y: 65px; } .piece:nth-child(24) { --x: 145px; --y: 65px; } .piece:nth-child(25) { --x: 0px; --y: 185px; } .footer { align-items: start; flex-wrap: wrap; } }
+    @media (max-width: 620px) {
+      .piece { width: 36px; height: 36px; font-size: .9rem; }
+      .piece:nth-child(1) { --x: -90px; --y: -100px; } .piece:nth-child(2) { --x: -45px; --y: -100px; } .piece:nth-child(3) { --x: 0px; --y: -100px; } .piece:nth-child(4) { --x: 45px; --y: -100px; } .piece:nth-child(5) { --x: 90px; --y: -100px; }
+      .piece:nth-child(6) { --x: -133px; --y: -35px; } .piece:nth-child(7) { --x: -95px; --y: -35px; } .piece:nth-child(8) { --x: -57px; --y: -35px; } .piece:nth-child(9) { --x: -19px; --y: -35px; } .piece:nth-child(10) { --x: 19px; --y: -35px; } .piece:nth-child(11) { --x: 57px; --y: -35px; } .piece:nth-child(12) { --x: 95px; --y: -35px; } .piece:nth-child(13) { --x: 133px; --y: -35px; }
+      .piece:nth-child(14) { --x: -90px; --y: 30px; } .piece:nth-child(15) { --x: -45px; --y: 30px; } .piece:nth-child(16) { --x: 30px; --y: 30px; } .piece:nth-child(17) { --x: 75px; --y: 30px; } .piece:nth-child(18) { --x: 120px; --y: 30px; }
+      .piece:nth-child(19) { --x: -108px; --y: 100px; } .piece:nth-child(20) { --x: -72px; --y: 100px; } .piece:nth-child(21) { --x: -36px; --y: 100px; } .piece:nth-child(22) { --x: 0px; --y: 100px; } .piece:nth-child(23) { --x: 36px; --y: 100px; } .piece:nth-child(24) { --x: 72px; --y: 100px; } .piece:nth-child(25) { --x: 108px; --y: 100px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <main class="party-shell">
+    <header>
+      <div>
+        <p class="eyebrow">A little birthday magic</p>
+        <h1>Make a wish.<br />Then watch it fly.</h1>
+      </div>
+      <p class="intro">One cake, twenty-five tiny wishes, and a message hiding in plain sight.</p>
+    </header>
+
+    <section class="cake-stage" aria-label="Interactive birthday cake surprise">
+      <p class="stage-note">The surprise starts soon</p>
+      <p class="countdown" aria-live="polite">Bursting in <strong id="timer">5</strong></p>
+      <div class="cake" id="cake" aria-hidden="true">
+        <div class="plate"></div><div class="tier tier-bottom"></div><div class="tier tier-top"></div>
+        <div class="icing icing-bottom"></div><div class="icing icing-top"></div>
+        <div class="drip one"></div><div class="drip two"></div><div class="drip three"></div>
+        <div class="cherry one"></div><div class="cherry two"></div><div class="cherry three"></div>
+        <div class="candle"><span class="flame"></span></div>
+      </div>
+      <div class="burst" id="burst">
+        <button class="piece" type="button" data-meaning="Happiness that keeps finding you.">H</button>
+        <button class="piece" type="button" data-meaning="A year full of bright beginnings.">A</button>
+        <button class="piece" type="button" data-meaning="Plenty of reasons to laugh out loud.">P</button>
+        <button class="piece" type="button" data-meaning="Peace for the busy days, too.">P</button>
+        <button class="piece" type="button" data-meaning="Your best ideas getting room to grow.">Y</button>
+        <button class="piece" type="button" data-meaning="Brave little adventures around every corner.">B</button>
+        <button class="piece" type="button" data-meaning="Incredible people close at hand.">I</button>
+        <button class="piece" type="button" data-meaning="Radiant moments worth remembering.">R</button>
+        <button class="piece" type="button" data-meaning="Tasty treats and zero regrets.">T</button>
+        <button class="piece" type="button" data-meaning="Hope that feels bigger than the candles.">H</button>
+        <button class="piece" type="button" data-meaning="Daring dreams coming true.">D</button>
+        <button class="piece" type="button" data-meaning="A whole year that feels like yours.">A</button>
+        <button class="piece" type="button" data-meaning="Year-long permission to celebrate yourself.">Y</button>
+        <button class="piece" type="button" data-meaning="Time for a fresh adventure.">T</button>
+        <button class="piece" type="button" data-meaning="Open doors and open skies.">O</button>
+        <button class="piece" type="button" data-meaning="Your people cheering the loudest.">Y</button>
+        <button class="piece" type="button" data-meaning="Overflowing joy, in every direction.">O</button>
+        <button class="piece" type="button" data-meaning="You are the reason for the party.">U</button>
+        <button class="piece" type="button" data-meaning="Deep rest after every big day.">*</button>
+        <button class="piece" type="button" data-meaning="Confidence to take up every room.">*</button>
+        <button class="piece" type="button" data-meaning="The kind of laughter that makes your cheeks hurt.">*</button>
+        <button class="piece" type="button" data-meaning="Wonderful surprises hiding in ordinary days.">*</button>
+        <button class="piece" type="button" data-meaning="Creative energy for every idea you chase.">*</button>
+        <button class="piece" type="button" data-meaning="Memories that get better every time you revisit them.">*</button>
+        <button class="piece" type="button" data-meaning="A lucky little nudge whenever you need one.">*</button>
+        <i class="confetti"></i><i class="confetti"></i><i class="confetti"></i><i class="confetti"></i>
+      </div>
+      <p class="message" id="message" aria-live="polite"><strong>HAPPY BIRTHDAY TO YOU!</strong> <span id="meaning">Choose a flying piece for its wish.</span></p>
+    </section>
+
+    <div class="footer">
+      <span>Click a letter after the burst to uncover its wish.</span>
+      <button id="replay" type="button">Light it again</button>
+      <a href="index.html">Back to home</a>
+    </div>
+  </main>
+
+  <script>
+    const cake = document.getElementById("cake");
+    const burst = document.getElementById("burst");
+    const timer = document.getElementById("timer");
+    const message = document.getElementById("message");
+    const meaning = document.getElementById("meaning");
+    const replay = document.getElementById("replay");
+    const pieces = document.querySelectorAll(".piece");
+    const stage = document.querySelector(".cake-stage");
+    let countdown;
+    let motionTimer;
+    let motionFrame;
+
+    function startRandomMotion() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const stageRect = stage.getBoundingClientRect();
+      const maxX = stageRect.width / 2 - 30;
+      const maxY = stageRect.height / 2 - 30;
+      const movers = [...pieces].map((piece) => ({
+        piece,
+        x: Math.max(-maxX, Math.min(maxX, Number.parseFloat(getComputedStyle(piece).getPropertyValue("--x")) || 0)),
+        y: Math.max(-maxY, Math.min(maxY, Number.parseFloat(getComputedStyle(piece).getPropertyValue("--y")) || 0)),
+        velocityX: (Math.random() * .26 + .16) * (Math.random() < .5 ? -1 : 1),
+        velocityY: (Math.random() * .26 + .16) * (Math.random() < .5 ? -1 : 1),
+        rotation: Number.parseFloat(getComputedStyle(piece).getPropertyValue("--r")) || 0,
+        rotationVelocity: (Math.random() * 1.2 + .4) * (Math.random() < .5 ? -1 : 1)
+      }));
+
+      function resolveCollisions() {
+        for (let firstIndex = 0; firstIndex < movers.length; firstIndex += 1) {
+          for (let secondIndex = firstIndex + 1; secondIndex < movers.length; secondIndex += 1) {
+            const first = movers[firstIndex];
+            const second = movers[secondIndex];
+            let deltaX = second.x - first.x;
+            let deltaY = second.y - first.y;
+            let distance = Math.hypot(deltaX, deltaY);
+            if (distance >= 50) continue;
+            if (distance === 0) {
+              deltaX = 1;
+              deltaY = 0;
+              distance = 1;
+            }
+            const normalX = deltaX / distance;
+            const normalY = deltaY / distance;
+            const overlap = 50 - distance;
+            first.x -= normalX * overlap / 2;
+            first.y -= normalY * overlap / 2;
+            second.x += normalX * overlap / 2;
+            second.y += normalY * overlap / 2;
+            const relativeVelocity = (second.velocityX - first.velocityX) * normalX + (second.velocityY - first.velocityY) * normalY;
+            if (relativeVelocity < 0) {
+              first.velocityX += relativeVelocity * normalX;
+              first.velocityY += relativeVelocity * normalY;
+              second.velocityX -= relativeVelocity * normalX;
+              second.velocityY -= relativeVelocity * normalY;
+            }
+          }
+        }
+      }
+
+      function movePieces() {
+        movers.forEach((mover) => {
+          mover.x += mover.velocityX;
+          mover.y += mover.velocityY;
+          mover.rotation += mover.rotationVelocity;
+        });
+        resolveCollisions();
+        movers.forEach((mover) => {
+          if (mover.x < -maxX || mover.x > maxX) {
+            mover.velocityX *= -1;
+            mover.x = Math.max(-maxX, Math.min(maxX, mover.x));
+          }
+          if (mover.y < -maxY || mover.y > maxY) {
+            mover.velocityY *= -1;
+            mover.y = Math.max(-maxY, Math.min(maxY, mover.y));
+          }
+          mover.piece.style.animation = "none";
+          mover.piece.style.opacity = "1";
+          mover.piece.style.transform = `translate(calc(-50% + ${mover.x}px), calc(-50% + ${mover.y}px)) rotate(${mover.rotation}deg)`;
+        });
+        motionFrame = window.requestAnimationFrame(movePieces);
+      }
+      movePieces();
+    }
+
+    function startSurprise() {
+      window.clearInterval(countdown);
+      window.clearTimeout(motionTimer);
+      window.cancelAnimationFrame(motionFrame);
+      pieces.forEach((piece) => {
+        piece.style.animation = "";
+        piece.style.opacity = "";
+        piece.style.transform = "";
+      });
+      cake.classList.remove("exploded");
+      burst.classList.remove("revealed");
+      message.classList.remove("show");
+      meaning.textContent = "Choose a flying piece for its wish.";
+      let seconds = 5;
+      timer.textContent = seconds;
+      countdown = window.setInterval(() => {
+        seconds -= 1;
+        timer.textContent = seconds;
+        if (seconds <= 0) {
+          window.clearInterval(countdown);
+          cake.classList.add("exploded");
+          burst.classList.add("revealed");
+          message.classList.add("show");
+          motionTimer = window.setTimeout(startRandomMotion, 1150);
+        }
+      }, 1000);
+    }
+
+    pieces.forEach((piece) => {
+      piece.addEventListener("click", () => {
+        meaning.textContent = piece.dataset.meaning;
+        message.classList.add("show");
+      });
+    });
+    replay.addEventListener("click", startSurprise);
+    startSurprise();
+  </script>
+</body>
+</html>
