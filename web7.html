@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f5f2e8" />
+  <title>Your Personal Cheer Squad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #203c38;
+      --muted: #687872;
+      --paper: #fbf8ef;
+      --coral: #db7056;
+      --green: #35675a;
+      --line: #dddcd0;
+      --serif: "DM Serif Display", Georgia, serif;
+      --sans: "DM Sans", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background-color: var(--paper);
+      background-image: radial-gradient(#d4cbbb 0.65px, transparent 0.65px);
+      background-size: 16px 16px;
+      color: var(--ink);
+      font-family: var(--sans);
+    }
+
+    button, a { font: inherit; }
+
+    .page { width: min(1120px, calc(100% - 48px)); margin: 0 auto; }
+
+    .topbar {
+      height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .wordmark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-size: 0.86rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .wordmark-icon { color: var(--coral); font-size: 1.35rem; }
+    .top-note { color: var(--muted); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    main { padding: 64px 0 48px; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      align-items: center;
+      gap: clamp(36px, 7vw, 90px);
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 18px;
+      color: var(--coral);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before { content: ""; width: 24px; height: 1px; background: currentColor; }
+    h1, h2, p { margin-top: 0; }
+
+    h1 {
+      max-width: 560px;
+      margin-bottom: 20px;
+      font-family: var(--serif);
+      font-size: clamp(3.2rem, 6vw, 5.4rem);
+      font-weight: 400;
+      line-height: 0.99;
+    }
+
+    h1 em { color: var(--coral); font-weight: 400; }
+
+    .intro {
+      max-width: 440px;
+      margin-bottom: 28px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.75;
+    }
+
+    .pep-talk {
+      width: min(100%, 430px);
+      min-height: 68px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border: 0;
+      border-radius: 4px;
+      background: var(--green);
+      color: #fffdf5;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 180ms ease, transform 180ms ease;
+    }
+
+    .pep-talk:hover { background: #274f45; transform: translateY(-2px); }
+    .pep-talk:focus-visible, .need-button:focus-visible, a:focus-visible { outline: 3px solid #dc805e; outline-offset: 4px; }
+    .pep-talk .spark { font-size: 1.35rem; }
+
+    .message {
+      width: min(100%, 430px);
+      min-height: 54px;
+      margin: 14px 0 0;
+      color: var(--green);
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      line-height: 1.45;
+    }
+
+    .photo-wrap { position: relative; padding: 0 28px 30px 0; animation: arrive 700ms 100ms both; }
+
+    .photo-wrap::before {
+      position: absolute;
+      z-index: -1;
+      right: 0;
+      bottom: 0;
+      width: 78%;
+      height: 80%;
+      border: 1px solid #d79b73;
+      content: "";
+    }
+
+    .photo {
+      min-height: 410px;
+      background: #d7dfcd url("https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1000&q=85") center 48% / cover;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 18px;
+    }
+
+    .photo-caption {
+      max-width: 190px;
+      padding: 13px 16px;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 1.12rem;
+      line-height: 1.3;
+      transform: rotate(-2deg);
+    }
+
+    .check-in {
+      margin-top: 72px;
+      padding: 30px 0 34px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .check-in h2, .little-notes h2 { margin-bottom: 8px; font-family: var(--serif); font-size: 1.7rem; font-weight: 400; }
+    .check-in p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .needs { display: flex; flex-wrap: wrap; gap: 9px; }
+
+    .need-button {
+      min-height: 42px;
+      padding: 9px 14px;
+      border: 1px solid #b7c6bb;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--green);
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+
+    .need-button:hover, .need-button[aria-pressed="true"] { border-color: var(--green); background: var(--green); color: white; }
+    .need-response {
+      grid-column: 1 / -1;
+      margin: -8px 0 0;
+      padding: 10px 0 10px 14px;
+      border-left: 2px solid var(--coral);
+      color: var(--green);
+      font-family: var(--serif);
+      font-size: 1.12rem;
+      line-height: 1.5;
+    }
+    .need-response[hidden] { display: none; }
+    .little-notes { padding: 35px 0 58px; }
+    .little-notes h2 { margin-bottom: 18px; }
+
+    .note-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .note-list li { padding-left: 14px; border-left: 2px solid #e3a184; }
+    .note-list p { margin: 0; color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+    .note-list strong { display: block; margin-bottom: 4px; color: var(--ink); }
+
+    footer {
+      min-height: 68px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .memories { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+    .memories a { color: var(--green); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .memories a:hover { color: var(--coral); }
+
+    @keyframes arrive {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 760px) {
+      .page { width: min(100% - 36px, 540px); }
+      .topbar { height: auto; min-height: 66px; gap: 12px; padding: 10px 0; }
+      .top-note { max-width: 145px; text-align: right; line-height: 1.5; }
+      main { padding: 36px 0 38px; }
+      .hero { grid-template-columns: 1fr; gap: 32px; }
+      h1 { max-width: 500px; font-size: 3rem; line-height: 1.02; }
+      .intro { font-size: 1rem; line-height: 1.65; }
+      .pep-talk { min-height: 56px; }
+      .photo-wrap { width: min(100%, 440px); justify-self: center; }
+      .photo { min-height: 0; aspect-ratio: 1.1 / 1; }
+      .check-in { margin-top: 42px; grid-template-columns: 1fr; gap: 18px; }
+      .need-button { min-height: 46px; }
+      .note-list { grid-template-columns: 1fr; gap: 16px; }
+      footer { align-items: flex-start; flex-direction: column; padding: 20px 0; }
+    }
+
+    @media (max-width: 420px) {
+      .page { width: calc(100% - 32px); }
+      .topbar { align-items: flex-start; }
+      .wordmark { gap: 7px; font-size: 0.8rem; }
+      .top-note { max-width: 118px; font-size: 0.68rem; }
+      h1 { font-size: 2.65rem; }
+      .needs { display: grid; grid-template-columns: 1fr; }
+      .need-button { width: 100%; text-align: left; }
+      .photo-wrap { padding-right: 16px; padding-bottom: 18px; }
+      .photo { padding: 12px; }
+      .photo-caption { font-size: 1rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <a class="wordmark" href="index.html"><span class="wordmark-icon" aria-hidden="true">✳</span> J x D <span>·</span> Silly Geese</a>
+      <span class="top-note">A little corner just for you</span>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">A note from your personal cheer squad</p>
+          <h1 id="hero-title">Hey. You don't have to <em>do it all</em> today.</h1>
+          <p class="intro">Some days are just a lot. So take one slow breath, unclench your jaw, and let someone who loves you remind you: you're doing better than you think.</p>
+          <button class="pep-talk" id="pep-talk" type="button"><span class="spark" aria-hidden="true">✳</span> I could use a pep talk</button>
+          <p class="message" id="message" aria-live="polite">You can start with just getting through this moment.</p>
+        </div>
+        <div class="photo-wrap">
+          <div class="photo" role="img" aria-label="A bright bunch of flowers, like a little reminder that good things are growing">
+            <div class="photo-caption">I'm in your corner.<br />Always. ♡</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="check-in" aria-labelledby="check-title">
+        <div>
+          <h2 id="check-title">What would help right now?</h2>
+          <p>No fixing required. Just pick what sounds nice.</p>
+        </div>
+        <div class="needs" role="group" aria-label="Choose what would help">
+          <button class="need-button" type="button" data-need="soft" aria-pressed="false">A soft landing</button>
+          <button class="need-button" type="button" data-need="boost" aria-pressed="false">A little boost</button>
+          <button class="need-button" type="button" data-need="breath" aria-pressed="false">A tiny reset</button>
+        </div>
+        <p class="need-response" id="need-response" aria-live="polite" hidden></p>
+      </section>
+
+      <section class="little-notes" aria-labelledby="notes-title">
+        <h2 id="notes-title">In case your brain is being mean</h2>
+        <ul class="note-list">
+          <li><p><strong>Rest is allowed.</strong>You don't have to earn a pause by reaching empty first.</p></li>
+          <li><p><strong>Small counts.</strong>One email, one sip of water, one deep breath. Still counts.</p></li>
+          <li><p><strong>You are loved, full stop.</strong>Not for what you get done. Just because you're you.</p></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <span>More little reminders, whenever you need them:</span>
+      <nav class="memories" aria-label="Our memories">
+        <a href="web1.html">Till next time</a>
+        <a href="web2.html">Daily love</a>
+        <a href="web3.html">Girlfriend day</a>
+        <a href="web4.html">School certificate</a>
+        <a href="web5.html">Angel Warrior Dash</a>
+        <a href="web6.html">Birthday surprise</a>
+      </nav>
+    </footer>
+  </div>
+
+  <script>
+    const pepTalks = [
+      "You have made it through every hard day so far. That's not nothing. That's you.",
+      "You don't need the whole plan. Just the next kind thing you can do for yourself.",
+      "I'm really proud of you. Even for the parts nobody else gets to see.",
+      "This feeling is real, but it isn't forever. You don't have to figure everything out tonight.",
+      "You are allowed to be a work in progress and still be wonderful company.",
+      "Imagine me handing you a snack and saying: hey, look at you, still going. That's pretty amazing."
+    ];
+    const needs = {
+      soft: "No pep talk needed. You can be tired, quiet, and unfinished here. I'm staying right beside you.",
+      boost: "Okay, tiny cheer squad moment: you are thoughtful, brave, and so much more capable than this one hard day is letting you feel.",
+      breath: "Drop your shoulders. Breathe in slowly, then let it out even slower. Nothing else needs your attention for these few seconds."
+    };
+    const message = document.getElementById("message");
+    const needResponse = document.getElementById("need-response");
+    let previousIndex = -1;
+
+    document.getElementById("pep-talk").addEventListener("click", () => {
+      let nextIndex = Math.floor(Math.random() * pepTalks.length);
+      if (pepTalks.length > 1 && nextIndex === previousIndex) nextIndex = (nextIndex + 1) % pepTalks.length;
+      previousIndex = nextIndex;
+      message.textContent = pepTalks[nextIndex];
+    });
+
+    document.querySelectorAll(".need-button").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".need-button").forEach((option) => option.setAttribute("aria-pressed", "false"));
+        button.setAttribute("aria-pressed", "true");
+        message.textContent = needs[button.dataset.need];
+        needResponse.textContent = needs[button.dataset.need];
+        needResponse.hidden = false;
+      });
+    });
+  </script>
+</body>
+</html>
